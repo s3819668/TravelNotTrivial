@@ -1,0 +1,46 @@
+@import './base.css';
+
+#app {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  /* padding: 2rem; */
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    /* place-items: center; */
+    justify-content: center;
+  }
+
+  #app {
+    height: 100vh;
+    /* display: grid; */
+    /* grid-template-columns: 1fr 1fr; */
+    /* padding: 0 2rem; */
+  }
+}
+
+/* 全局不可拖曳和不可選取 */
+html, body {
+  /* user-select: none; 禁止選取 */
+  -webkit-user-drag: none; /* 禁止拖曳 */
+  /* -moz-user-select: none; 禁止選取 */
+  /* -ms-user-select: none; 禁止選取 */
+  cursor: default; /* 設置光標為默認 */
+}
