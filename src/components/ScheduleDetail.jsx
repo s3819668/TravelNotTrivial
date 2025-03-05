@@ -6,6 +6,7 @@ import Attraction from './Attraction';
 import Carousel from './Carousel';
 import { ScheduleContext } from '../context/ScheduleContext';
 import { TripDateContext } from '../context/TripDateContext';
+import { AttractionContext } from '../context/AttractionContext';
 
 
 const TripDateDetail = styled.div`
@@ -18,7 +19,7 @@ const TripDateDetail = styled.div`
 const ScheduleDetail = () => {
   const {savedData, schedules, setSchedules, activateSchedule, setActivateSchedule } = useContext(ScheduleContext);
   const {activateDate, setActivateDate} = useContext(TripDateContext);
-  const [attractions, setAttractions] = useState([]);
+  const {attractions, setAttractions} = useContext(AttractionContext);
   const [dates, setDates] = useState([]);
 
   useEffect(() => {
@@ -43,9 +44,6 @@ const ScheduleDetail = () => {
     updateDates();
   }, [attractions]);
 
-  useEffect(() => {
-    console.log("attractions:", attractions);
-}, [attractions]);
 
   const updateDates = () => {
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -74,22 +72,8 @@ const ScheduleDetail = () => {
     return activateDate;
   };
   
+  const activateAttractions = attractions?.filter(item => item.yymmdd === activateDate.yymmdd);
 
-  const removeAttraction = (index) => {
-    const newAttractions = [...attractions];
-    newAttractions.splice(index, 1);
-    setAttractions(newAttractions);
-    saveDataToLocalStorage(newAttractions);
-  };
-
-  const addAttraction = (newAttraction) => {
-    newAttraction.yy = new Date(newAttraction.yymmdd).getFullYear();
-    newAttraction.mmdd = new Date(newAttraction.yymmdd).getMonth() + 1 + "/" + new Date(newAttraction.yymmdd).getDate();
-    const newAttractions = [...attractions, newAttraction];
-    setAttractions(newAttractions);
-    saveDataToLocalStorage(newAttractions);
-    
-  };
 
   const saveDataToLocalStorage = (data) => {
     let schedules = JSON.parse(localStorage.getItem('schedules')) || [];
@@ -99,24 +83,29 @@ const ScheduleDetail = () => {
     }
     localStorage.setItem('schedules', JSON.stringify(schedules));
   };
-  
 
-  const activateAttractions = attractions?.filter(item => item.yymmdd === activateDate.yymmdd);
+  const removeAttraction = (index) => {
+    const attractionToRemove = activateAttractions[index];
+    const newAttractions = attractions.filter(attraction => attraction !== attractionToRemove);
+    setAttractions(newAttractions);
+    saveDataToLocalStorage(newAttractions);
+  };
 
   return (
     <div>
       <TripDate dates={dates} actDate={activateDate} className="tripDateNav" />
       <TripDateDetail>
-        <AttractionAddForm onAddAttraction={addAttraction} defaultDate={activateDate.date} />
+        <AttractionAddForm defaultDate={activateDate.date} />
         {activateAttractions?.map((item, index) => (
           <Attraction
             key={index}
             title={item.title}
-            time={item.time}
+            startTime={item.startTime}
+            endTime={item.endTime}
             content={item.content}
-            imgURL={item.selectedFileUrl}
-            onRemove={() => removeAttraction(index)}
+            imgURL="https://www.gotokyo.org/tc/destinations/western-tokyo/shibuya/images/main.jpg"
             className={index % 2 === 0 ? 'leftComponent' : 'rightComponent'}
+            onRemove = {() => removeAttraction(index)}
           />
         ))}
       </TripDateDetail>

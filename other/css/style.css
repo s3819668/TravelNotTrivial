@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+.nav {
+  z-index: 1;
+  width: 80vw;
+  height: 10vh;
+  background-color: #777;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav .date {
+  margin: 0.5%;
+  text-align: center;
+  line-height: 9vh;
+  font-size: 3rem;
+  width: 9vh;
+  height: 9vh;
+  background-color: #999;
+}
+
+.container {
+  z-index: -1;
+  padding-top: 10vh;
+  padding-bottom: 5vh;
+  width: 80vw;
+  min-height: 75vh;
+  position: absolute;
+  top: 10vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #999;
+}
+
+.attractions {
+  width: 7vw;
+  height: 7vw;
+  background-color: #3498db;
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.attractions .attractionDot {
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 80%;
+  border-radius: 100%;
+  background-color: #ccc;
+}
+.attractions .activeAttraction {
+  z-index: -1;
+  width: 7vw;
+  height: 7vw;
+  background-color: #ccc;
+  border-radius: 100%;
+  position: absolute;
+  animation: expand 2s ease-out infinite;
+}
+.attractions .picture-box {
+  background: #000;
+  width: 16vw;
+  height: 9vw;
+  position: absolute;
+  top: -5vh;
+}
+.attractions .picture-box-left {
+  left: 15vw;
+}
+.attractions .picture-box-right {
+  left: -24vw;
+}
+
+.transportation {
+  width: 1vw;
+  height: 10vh;
+  background-color: #3498db;
+}
+
+@keyframes expand {
+  0% {
+    width: 80%;
+    height: 80%;
+    opacity: 1;
+  }
+  50% {
+    width: 150%;
+    height: 150%;
+    opacity: 0;
+  }
+  50.001% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+}/*# sourceMappingURL=style.css.map */

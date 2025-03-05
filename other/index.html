@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="./js/data.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="nav">
+            <div class="date" v-for="day in days" @click="changeDay(day.date)">{{day.date}}</div>
+        </div>
+        <div class="container">
+            <div v-for="(item, index) in viewing.trip" :key="index"
+                :class="{ attractions: item === 'attractions', transportation: item === 'transportation' }">
+                <div :class="{activeAttraction: index===activeAttraction}"></div>
+                <div class="attractionDot" v-if="item==='attractions'" @click="changeActiveAttraction(index)"></div>
+                <div class="picture-box-left picture-box" v-if="item==='attractions'&& index % 4 != 0">
+                </div>
+                <div class="picture-box-right picture-box" v-if="item==='attractions'&& index % 4 === 0">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                days: null,
+                viewing: null,
+                activeAttraction: null,
+            };
+        },
+        created() {
+            this.days = days
+            this.viewing = days[0]
+            this.activeAttraction = 2
+            // fetch('./js/data.json')
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         this.items = data.items;
+            //     })
+            //     .catch(error => {
+            //         console.error('Error loading data:', error);
+            //     });
+        },
+        methods: {
+            changeDay(targetDate) {
+                this.viewing = days.find(day => day.date === targetDate);
+            },
+            changeActiveAttraction(idx) {
+                this.activeAttraction = idx;
+                console.log(this.activeAttraction)
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

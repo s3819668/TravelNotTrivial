@@ -5,6 +5,7 @@ import { LangContext } from '../context/GlobalLangContext';
 
 // Styled Components
 const Container = styled.div`
+  width:50vw;
   min-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -16,7 +17,6 @@ const Container = styled.div`
 
 const TypewriterWrapper = styled.div`
   width: 100%;
-  max-width: 600px;
   height: 60px;
   display: flex;
   justify-content: center;
@@ -33,7 +33,6 @@ const TypewriterText = styled.h1`
 
 const InputWrapper = styled.div`
   width: 100%;
-  max-width: 600px;
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
@@ -184,7 +183,7 @@ const AIrecommend = () => {
           clearInterval(timer);
         }
       }
-    }, isAddingDots ? 500 : 150);
+    },100);
 
     return () => clearInterval(timer);
   }, [currentText]);

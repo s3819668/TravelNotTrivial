@@ -1,5 +1,8 @@
-import { useState, useRef,  } from 'react';
+import { useState, useRef, useContext } from 'react';
 import styled from 'styled-components';
+import { AttractionContext } from '../context/AttractionContext';
+import { TripDateContext } from '../context/TripDateContext';
+import { ScheduleContext } from '../context/ScheduleContext';
 
 const FloatingForm = styled.form`
   z-index: 10;
@@ -100,10 +103,14 @@ const RegionCommon = styled.div`
   color:#e2a75a;  
 `
 
-const AttractionAddForm = ({ onAddAttraction }) => {
+const AttractionAddForm = () => {
+  const {attractions, setAttractions} = useContext(AttractionContext);
+  const {activateDate, setActivateDate} = useContext(TripDateContext);
+  const {savedData, schedules, setSchedules, activateSchedule, setActivateSchedule } = useContext(ScheduleContext);
   const [newAttraction, setNewAttraction] = useState({
     title: '',
-    time: '',
+    startTime: '',
+    endTime: '',
     content: '',
     yymmdd: '',
     selectedFile: null,
@@ -112,17 +119,40 @@ const AttractionAddForm = ({ onAddAttraction }) => {
   const [uploadMessage, setUploadMessage] = useState('上傳圖片');
   const fileInputRef = useRef(null);
 
+  const saveDataToLocalStorage = (data) => {
+    let schedules = JSON.parse(localStorage.getItem('schedules')) || [];
+    const existingSchedule = schedules.find(schedule => schedule.ScheduleName === activateSchedule);
+    if (existingSchedule) {
+      existingSchedule.ScheduleDetail = data;
+    }
+    localStorage.setItem('schedules', JSON.stringify(schedules));
+  };
+
+  const addAttraction = (newAttraction) => {
+    newAttraction.yy = new Date(newAttraction.yymmdd).getFullYear();
+    newAttraction.mmdd = new Date(newAttraction.yymmdd).getMonth() + 1 + "/" + new Date(newAttraction.yymmdd).getDate();
+    const newAttractions = [...attractions, newAttraction];
+    setAttractions(newAttractions);
+    saveDataToLocalStorage(newAttractions);
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    setActivateDate({ yymmdd: newAttraction.yymmdd, weekday: weekdays[new Date(newAttraction.yymmdd).getDay()]});
+  };
+
   const handleSubmit = (e) => {
+    
     e.preventDefault();
-    onAddAttraction({ ...newAttraction });
+    addAttraction({ ...newAttraction });
     setNewAttraction({
         title: "",
         content: "",
+        startTime: "",
+        endTime: "",
         selectedFile: null,
         selectedFileUrl: null,
         yymmdd: newAttraction.yymmdd,
     });
-};
+  };
+  
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
@@ -145,6 +175,7 @@ const AttractionAddForm = ({ onAddAttraction }) => {
       setUploadMessage('');
     }
   };
+  
 
   return (
     <RegionCommon>
@@ -167,12 +198,20 @@ const AttractionAddForm = ({ onAddAttraction }) => {
           // required
         />
 
-        <Label htmlFor="time">時間：</Label>
+        <Label htmlFor="time">起始時間：</Label>
         <Input
           type="time"
           id="time"
-          value={newAttraction.time}
-          onChange={(e) => setNewAttraction({ ...newAttraction, time: e.target.value })}
+          value={newAttraction.startTime}
+          onChange={(e) => setNewAttraction({ ...newAttraction, startTime: e.target.value })}
+          // required
+        />
+        <Label htmlFor="time">結束時間：</Label>
+        <Input
+          type="time"
+          id="time"
+          value={newAttraction.endTime}
+          onChange={(e) => setNewAttraction({ ...newAttraction, endTime: e.target.value })}
           // required
         />
 

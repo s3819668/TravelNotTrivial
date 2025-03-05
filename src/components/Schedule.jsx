@@ -41,7 +41,7 @@ const Schedule = () => {
     const { activateLang } = useContext(LangContext)
 
     const newPlanText={
-        "en-us":"New Schedule",
+        "en-us":"New",
         "zh-tw":"新計畫"
     }
     return (

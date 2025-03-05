@@ -66,16 +66,17 @@ const Img = styled.img`
   opacity: 0.8;
 `;
 
-const Attraction = ({ title, time, content, imgURL, onRemove }) => {
+const Attraction = ({ title, startTime, endTime, content, imgURL, onRemove }) => {
+
   return (
     <Thing>
       <Title>{title}</Title>
-      <Time>{time}</Time>
-      <Content>{content}</Content>
-      <Remove onClick={onRemove}>x</Remove>
       <UploadPicture>
         {imgURL && <Img src={imgURL} alt="imgURL" />}
       </UploadPicture>
+      <Time>{startTime}{"~"}{endTime}</Time>
+      <Content>{content}</Content>
+      <Remove onClick={onRemove}>x</Remove>
     </Thing>
   );
 };
