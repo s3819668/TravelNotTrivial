@@ -36,7 +36,7 @@ const ScheduleItem = styled.div`
 
 
 const Schedule = () => {
-    const { schedules, activateSchedule, setActivateSchedule } = useContext(ScheduleContext);
+    const { scheduleNames, activateScheduleName, setActivateScheduleName } = useContext(ScheduleContext);
     const { setShowRecommend} = useContext(SwitchRecommendContext);
     const { activateLang } = useContext(LangContext)
 
@@ -46,24 +46,24 @@ const Schedule = () => {
     }
     return (
         <ScheduleContainer>
-            {schedules.map((schedule, index) => (
+            {scheduleNames?.map((scheduleName, index) => (
                 <ScheduleItem 
                     key={index} 
                     onClick={() => {
-                        setActivateSchedule(schedule);
+                        setActivateScheduleName(scheduleName);
                         setShowRecommend(false);
                     }}
-                    isactive={schedule === activateSchedule? 1 : undefined}
+                    isactive={scheduleName === activateScheduleName? 1 : undefined}
                 >
-                    {schedule}
+                    {scheduleName}
                 </ScheduleItem>
             ))}
                 <FakeScheduleItem 
                     onClick={() => {
-                        setActivateSchedule("New Schedule");
+                        setActivateScheduleName("New Schedule");
                         setShowRecommend(true);
                     }}
-                    isactive={"New Schedule" === activateSchedule? 1 : undefined}
+                    isactive={"New Schedule" === activateScheduleName? 1 : undefined}
                 >
                     {newPlanText[activateLang]}
                 </FakeScheduleItem>

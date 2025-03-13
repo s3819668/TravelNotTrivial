@@ -1,16 +1,23 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 const ScheduleContext = createContext();
 
 const ScheduleProvider = ({ children }) => {
-    if (!localStorage.getItem('schedules') || JSON.parse(localStorage.getItem('schedules')).length==0) {
-        localStorage.setItem('schedules', '[{"ScheduleName": "東京", "ScheduleDetail": []}, {"ScheduleName": "大阪", "ScheduleDetail": []}]');
-    }
-    const savedData = JSON.parse(localStorage.getItem('schedules'));
-    const [schedules, setSchedules] = useState(savedData?.map(item => item.ScheduleName));
-    const [activateSchedule,setActivateSchedule] = useState("New Schedule");
+    const initialData = JSON.parse(localStorage.getItem('schedules'));
+    const [savedData, setSavedData] = useState(initialData);
+    const [scheduleNames, setScheduleNames] = useState(initialData?.map(item => item.ScheduleName));
+    const [activateScheduleName, setActivateScheduleName] = useState("New Schedule");
+
+    useEffect(() => {
+        setScheduleNames(savedData?.map(item => item.ScheduleName));
+    }, [savedData]);
+
+    const updateSavedData = (newData) => {
+        setSavedData(newData);
+        localStorage.setItem('schedules', JSON.stringify(newData));
+    };
 
     return (
-        <ScheduleContext.Provider value={{savedData, schedules, setSchedules,activateSchedule,setActivateSchedule }}>
+        <ScheduleContext.Provider value={{ savedData, setSavedData: updateSavedData, scheduleNames, setScheduleNames, activateScheduleName, setActivateScheduleName }}>
             {children}
         </ScheduleContext.Provider>
     );

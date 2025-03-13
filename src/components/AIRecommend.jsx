@@ -2,6 +2,9 @@ import { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { getOpenAIResponse } from '../api/openAI';
 import { LangContext } from '../context/GlobalLangContext';
+import { ScheduleContext } from '../context/ScheduleContext';
+import { SwitchRecommendContext } from '../context/SwitchRecommendContext';
+import { TripDateContext } from '../context/TripDateContext';
 
 // Styled Components
 const Container = styled.div`
@@ -91,6 +94,9 @@ const AIrecommend = () => {
   const [input, setInput] = useState('');
   const [response, setResponse] = useState('');
   const {activateLang} = useContext(LangContext);
+  const { savedData, setSavedData, activateScheduleName, setActivateScheduleName } = useContext(ScheduleContext);
+  const { setShowRecommend} = useContext(SwitchRecommendContext);
+  const { activateDate, setActivateDate } = useContext(TripDateContext);
 
   const recommendation = {
     "zh-tw": [
@@ -193,7 +199,31 @@ const AIrecommend = () => {
     if (input.trim()) {
       try {
         const result = await getOpenAIResponse(input,activateLang);
-        setResponse(result);
+        console.log(result);
+
+        // Retrieve schedules from localStorage
+        const schedules = JSON.parse(localStorage.getItem('schedules')) || [];
+
+        // Append the result to schedules
+        if (result){
+          if (result.ScheduleName && result.ScheduleDetail){
+            schedules.push(result);
+          }
+        }
+        // Update localStorage with the new schedules
+        localStorage.setItem('schedules', JSON.stringify(schedules));
+
+        // Update savedData context
+        setSavedData(schedules);
+
+        setActivateScheduleName(result.ScheduleName);
+        const activateDates = JSON.parse(localStorage.getItem("activateDates")) || [];
+        activateDates.push({"ScheduleName":result.ScheduleName,"date":{"yymmdd":result.ScheduleDetail[0].yymmdd}});
+        localStorage.setItem("activateDates", JSON.stringify(activateDates));
+        setActivateDate(result.ScheduleDetail[0].yymmdd);
+
+
+        setShowRecommend(false);
         setInput('');
       } catch (error) {
         setResponse(sorryForErrorText[activateLang]);
@@ -215,7 +245,6 @@ const AIrecommend = () => {
         />
         <SubmitButton onClick={handleSubmit}>{submitText[activateLang]}</SubmitButton>
       </InputWrapper>
-      {response && <ResponseText>{response}</ResponseText>}
     </Container>
   );
 };

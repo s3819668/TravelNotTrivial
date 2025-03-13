@@ -17,14 +17,14 @@ const TripDateDetail = styled.div`
   flex-direction: column;
 `;
 const ScheduleDetail = () => {
-  const {savedData, schedules, setSchedules, activateSchedule, setActivateSchedule } = useContext(ScheduleContext);
+  const {savedData, schedules, setSchedules, activateScheduleName, setActivateScheduleName } = useContext(ScheduleContext);
   const {activateDate, setActivateDate} = useContext(TripDateContext);
   const {attractions, setAttractions} = useContext(AttractionContext);
   const [dates, setDates] = useState([]);
 
   useEffect(() => {
     if (savedData) { 
-      setAttractions(savedData.find(schedule => schedule.ScheduleName == activateSchedule)?.ScheduleDetail);
+      setAttractions(savedData.find(schedule => schedule.ScheduleName == activateScheduleName)?.ScheduleDetail);
     }
 
     updateDates();
@@ -38,7 +38,7 @@ const ScheduleDetail = () => {
         setActivateDate("");
       }
     }
-  }, [activateSchedule]);
+  }, [activateScheduleName]);
 
   useEffect(() => {
     updateDates();
@@ -68,7 +68,7 @@ const ScheduleDetail = () => {
 
   const loadDateSelectedLastTime = () => {
     const activateDates = JSON.parse(localStorage.getItem("activateDates")) || [];
-    const activateDate = activateDates.find(schedule => schedule.ScheduleName === activateSchedule);
+    const activateDate = activateDates.find(schedule => schedule.ScheduleName === activateScheduleName);
     return activateDate;
   };
   
@@ -77,7 +77,7 @@ const ScheduleDetail = () => {
 
   const saveDataToLocalStorage = (data) => {
     let schedules = JSON.parse(localStorage.getItem('schedules')) || [];
-    const existingSchedule = schedules.find(schedule => schedule.ScheduleName === activateSchedule);
+    const existingSchedule = schedules.find(schedule => schedule.ScheduleName === activateScheduleName);
     if (existingSchedule) {
       existingSchedule.ScheduleDetail = data;
     }

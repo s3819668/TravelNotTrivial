@@ -63,7 +63,7 @@ const Weekday = styled.div`
 
 const TripDate = ({ dates }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const {activateSchedule, setActivateSchedule} = useContext(ScheduleContext);
+  const {activateScheduleName, setActivateScheduleName} = useContext(ScheduleContext);
   const { activateDate, setActivateDate } = useContext(TripDateContext);
 
   const handlePrev = () => {
@@ -76,11 +76,11 @@ const TripDate = ({ dates }) => {
 
   const handleSelectDate = (d) => {
     const activateDates = JSON.parse(localStorage.getItem("activateDates")) || [];
-    const activateDate = activateDates.find(schedule => schedule.ScheduleName === activateSchedule);
+    const activateDate = activateDates.find(schedule => schedule.ScheduleName === activateScheduleName);
     if (activateDate) {
       activateDate.date = d
     }else{
-      activateDates.push({"ScheduleName":activateSchedule,"date":d})
+      activateDates.push({"ScheduleName":activateScheduleName,"date":d})
     }
     localStorage.setItem("activateDates", JSON.stringify(activateDates));
     setActivateDate(d);
